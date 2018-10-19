@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS30-8-HTML5 Canvas by RX</title>
+    <style>
+        html {
+            box-sizing: border-box;
+        }
+
+        *,
+        *:before,
+        *:after {
+            margin: 0;
+            padding: 0;
+            box-sizing: inherit;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        [positionX, positionY] = [0, 0];
+
+        let hue = 0;
+
+
+        ctx.lineWidth = 3;
+        let direction = true;
+
+        let isDrawing = false;
+
+        function draw(e) {
+            if (!isDrawing) return
+            ctx.beginPath();
+            ctx.strokeStyle = `hsla(${hue}, 100%, 50%, 1)`
+            ctx.moveTo(positionX, positionY);
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.stroke();
+            [positionX, positionY] = [e.clientX, e.clientY];
+
+            if (ctx.lineWidth >= 50 || ctx.lineWidth < 3) {
+                direction = !direction;
+            }
+
+            if (direction) {
+                ctx.lineWidth++;
+            } else if (!direction) {
+                ctx.lineWidth--;
+            }
+
+            hue++;
+        }
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [positionX, positionY] = [e.clientX, e.clientY];
+        });
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseoff', () => isDrawing = false);
+    </script>
+</body>
+
+</html>
